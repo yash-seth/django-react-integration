@@ -1,5 +1,6 @@
 import './App.css';
 import { useState } from 'react'
+import axios from 'axios';    //need to import to use axios
 
 function App() {
   const [answer, setAnswer] = useState("")
@@ -9,31 +10,54 @@ function App() {
     setAnswer(e.target.value)
   }
 
+    //the approach using native Fetch API to send and receive data through API calls
+
+  // const submitAnswer = async(e) => {
+  //   e.preventDefault();
+  //   let formData = new FormData();
+  //   formData.append("answer",answer)
+  //   fetch(
+  //     "http://127.0.0.1:8000/submitAnswer", 
+  //     {    
+  //       method: "POST",
+  //       headers: {
+  //         Accept: "application/json",
+  //         },
+  //       body: formData,
+  //     })
+  //     .then((response) => {
+  //         return response.json();
+  //     })
+  //       .then((response) => {
+  //         console.log(response.result)
+  //         setResult(response.result)
+  //       })
+  //       .catch((error) => {
+  //         console.error(error);
+  //       });
+  //       setAnswer("")
+  // }
+
+
+
+  //the approach using Axios library to send and receive data through API calls
+
   const submitAnswer = async(e) => {
-    e.preventDefault();
-    let formData = new FormData();
-    formData.append("answer",answer)
-    fetch(
-      "http://127.0.0.1:8000/submitAnswer", 
-      {    
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          },
-        body: formData,
-      })
-      .then((response) => {
-          return response.json();
-      })
-        .then((response) => {
-          console.log(response.result)
-          setResult(response.result)
+      e.preventDefault();
+      let formData = new FormData();
+      formData.append("answer",answer)
+      axios.post("http://127.0.0.1:8000/submitAnswer", formData, {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json;charset=UTF-8",
+      },
         })
-        .catch((error) => {
-          console.error(error);
-        });
-        setAnswer("")
-  }
+        .then(({data}) => {
+          console.log(data);
+          setResult(data.result)
+      });
+      setAnswer("")
+    }
 
   return (
     <>
